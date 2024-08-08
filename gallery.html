@@ -6,41 +6,70 @@
     <style>
       body { margin: 0; }
     </style>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navstyle.css">
+    <link rel="stylesheet" href="css/cardstyles.css">
+    <script src="components/header.js" type="text/javascript" defer></script>
   </head>
 <body>
-<header class="top-bar">
-<nav class="navbar navbar-expand-lg fixed-top navbar-scroll">
-  <div class="container-fluid">
-    <link rel="icon" type="image/x-icon" href="logo.png" />
-    <button class="navbar-toggler ps-0" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarExample01"
-      aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon d-flex justify-content-start align-items-center">
-        <i class="fas fa-bars"></i>
-      </span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarExample01">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item active">
-          <a class="nav-link" aria-current="page" href="/">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="experience">Experience</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="projects">Projects</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="gallery">Gallery</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="contact">Contact</a>
-        </li>
-      </ul>
+<header-component></header-component>
 
-    </div>
-  </div>
-</nav>
-</header>
+<div class="container">
+         <div class="card__container">
+            <article class="card__article">
+               <img src="static/images/gallery/thumb/cheetham_study.gif" alt="image" class="card__img">
+               <h3 class="project__title">Paintings</h3>
+
+               <a href="paintings" rel="page" class="card__button">
+                  — view —
+               </a>
+            </article>
+
+            <article class="card__article">
+               <img src="static/images/gallery/thumb/call002.png" alt="image" class="card__img">
+               <h3 class="project__title">Sketchbook</h3>
+
+               <a href="sketches" rel="page" class="card__button">
+                  — view —
+               </a>
+            </article>
+
+            <article class="card__article">
+              <h3 class="project__title">3D</h3>
+               <img src="static/images/gallery/thumb/food.png" alt="image" class="card__img">
+
+               <a href="modeling" rel="page" class="card__button">
+                  — view —
+               </a>
+            </article>
+
+            <article class="card__article">
+               <img src="static/images/gallery/thumb/env.png" alt="image" class="card__img">
+               <h3 class="project__title">Environments</h3>
+
+               <a href="environments" rel="page" class="card__button">
+                  — view —
+               </a>
+            </article>
+
+            <article class="card__article">
+               <img src="static/images/gallery/thumb/fractal-shader.gif" alt="image" class="card__img">
+               <h3 class="project__title">Shader Art</h3>
+
+               <a href="shaderart" rel="page" class="card__button">
+                  — view —
+               </a>
+            </article>
+
+            <article class="card__article">
+               <h3 class="project__title">Games</h3>
+               
+               <img src="static/images/gallery/thumb/breakout.png" alt="image" class="card__img">
+
+               <a href="https://okaykale.itch.io/" class="card__button">
+                  — view on itch.io —
+               </a>
+            </article>
+         </div>
+      </div>
 </body>
 </html>

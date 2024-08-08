@@ -1,3 +1,8 @@
+// CHECK WEBGL VERSION
+if ( WEBGL.isWebGL2Available() === false ) {
+  document.body.appendChild( WEBGL.getWebGL2ErrorMessage() );
+}
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -6,13 +11,16 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { Text } from 'troika-three-text';
 
 
 let mixer;
 let objParentLookup;
 let objChildrenList;
+let texLoader, faceMesh;
 let composer, outlinePass;
 let selectedObjects = [];
+let faceTex = [];
 const clock = new THREE.Clock();
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({ antialising: true });
@@ -20,23 +28,30 @@ const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.inner
 const controls = new OrbitControls( camera, renderer.domElement );
 const loader = new GLTFLoader();
 const idleLayer = 8;
-const hoverLayer = 1;
 const linkLayer = 2;
 const animateLayer = 4;
-var keyboard = new THREEx.KeyboardState();
 
 const objDirectory = {
-	"Books" : "/projects",
+	"Books" : "/sketches",
 	"BrushHolder" : "/gallery",
 	"Monitor" : "/experience",
-	"KeyboardMouse" : "/experience"
+	"KeyboardMouse" : "/projects"
 };
 
+const toolTips = {
+	"Books" : "Check out my art",
+	"BrushHolder" : "Peek at my sketchbook",
+	"Monitor" : "Looking for my resumé?",
+	"KeyboardMouse" : "Check out my projects",
+	"Plant" : "Water me!",
+	"rig" : "yo",
+}
+
 const params = {
-				edgeStrength: 10.0,
-				edgeGlow: 0.8,
-				edgeThickness: 6,
-				pulsePeriod: 1.2,
+				edgeStrength: 7.0,
+				edgeGlow: 0.9,
+				edgeThickness: 10,
+				pulsePeriod: 0,
 				usePatternTexture: false
 			};
 
@@ -44,6 +59,8 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 // Set anti-aliasing on renderer
 renderer.setPixelRatio( window.devicePixelRatio * 2 );
 document.body.appendChild( renderer.domElement );
+
+texLoader = new THREE.TextureLoader();
 
 // SET UP COMPOSER FOR RAYCAST SELECTION POST PROCESSING ON HOVER
 // postprocessing
@@ -54,14 +71,7 @@ composer.addPass( renderPass );
 
 outlinePass = new OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
 composer.addPass( outlinePass );
-function Configuration() {
 
-				this.visibleEdgeColor = '#ffffff';
-				this.hiddenEdgeColor = '#190a05';
-
-			}
-
-const conf = new Configuration();
 outlinePass.edgeStrength = params.edgeStrength;
 outlinePass.edgeGlow = params.edgeGlow;
 outlinePass.visibleEdgeColor.set(0xffffff);
@@ -85,9 +95,16 @@ window.onscroll = function () {
      window.scrollTo(0,0);
    }
 
+// add text overlay
+const text = "Hi! I'm Kalli, software engineer and 2D/3D artist. Welcome to my workspace! \nClick around to explore.";
+const textMesh = makeTextLabel(text, 0.8, 0xFFFFFF, -10, 10, -4, 20, 'center');
+
+const navText = "ZOOM: MIDDLE MOUSE / WHEEL \nROTATE: LEFT MOUSE \nPAN: RIGHT MOUSE OR \nSHIFT + LEFT MOUSE";
+const navHelpMesh = makeTextLabel(navText, 0.4, 0xFFFFFF, 5.5, 6.5, -4, 12, 'left');
+
 // add GLTF model to scene
 
-loader.load( 'static/models/lowpoly_v4_2_sitting.glb', function ( gltf ) {
+loader.load( 'static/models/lowpoly_v4_3_sitting.glb', function ( gltf ) {
 
 	var mesh = gltf.scene.children[0];
 	mixer = new THREE.AnimationMixer(mesh);
@@ -99,19 +116,18 @@ loader.load( 'static/models/lowpoly_v4_2_sitting.glb', function ( gltf ) {
 
 	for (let i = 0; i < gltf.scene.children.length; i++) {
 		var objName = gltf.scene.children[i].name;
-		if (objName === "rig" || objName === "CoffeeMug" || objName === "Headphones") {
+		if (objName === "rig" || objName === "CoffeeMug" || objName === "Headphones" || objName === "Plant") {
 			setObjLayerRecursive(gltf.scene.children[i], animateLayer, objName);
 		}
-		if (objName === "BG" || objName === "BGShadow" || objName === "Tabletop"  || objName === "Plant" || objName === "Chair" || objName === "Yarn") {
+		if (objName === "BG" || objName === "BGShadow" || objName === "Tabletop" || objName === "Chair" || objName === "Yarn") {
 			setObjLayerRecursive(gltf.scene.children[i], idleLayer, objName);
 		}
 		if (objName === "Monitor" || objName === "BrushHolder" || objName === "Books" || objName === "KeyboardMouse") {
 			setObjLayerRecursive(gltf.scene.children[i], linkLayer, objName);
 		}
 
-		objChildrenList.set("rig", objChildrenList.get("rig").slice(0, 6));
-
 	}
+	objChildrenList.set("rig", objChildrenList.get("rig").slice(0, 6));
 
 }, undefined, function ( error ) {
 
@@ -122,6 +138,7 @@ loader.load( 'static/models/lowpoly_v4_2_sitting.glb', function ( gltf ) {
 // SET OBJ LAYERS FOR RAYCASTING & SELECTION
 function setObjLayerRecursive(mesh, layer, parentName) {
 	mesh.layers.set(layer);
+	if (mesh.name == "face") faceMesh = mesh;
 	if (mesh.children.length > 0) {
 		for (let i = 0; i < mesh.children.length; i++) {
 			setObjLayerRecursive(mesh.children[i], layer, parentName);
@@ -160,7 +177,6 @@ raycaster.layers.enableAll();
 raycaster.layers.disable(idleLayer);
 raycaster.layers.enable(animateLayer);
 raycaster.layers.enable(linkLayer);
-raycaster.layers.enable(hoverLayer);
 document.addEventListener('mousedown', onMouseDown);
 document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
@@ -195,11 +211,6 @@ function onDocumentMouseMove(event)
 	const intersections = raycaster.intersectObjects(scene.children, true);
 	if (intersections.length > 0) {
 		const selectedObject = intersections[0].object;
-		
-		//selectedObjects.push(selectedObject);
-		//outlinePass.selectedObjects = selectedObjects;
-		//console.log(selectedObjects);
-
 		var objParentName = objParentLookup.get(selectedObject.name);
 		console.log(`${objParentName} hovered`);
 		enableOutlineGroup(objParentName);
@@ -221,13 +232,28 @@ function enableOutlineGroup(parentName) {
 	}
 }
 
+// TEXT OVERLAYS
+function makeTextLabel(text, size, color, posX, posY, posZ, maxWidth, align) {
+	const textObj = new Text();
+	textObj.layers.set(idleLayer);
+	scene.add(textObj);
+	textObj.textAlign = align;
+	textObj.text = text;
+	textObj.fontSize = size;
+	textObj.position.x = posX;
+	textObj.position.y = posY;
+	textObj.position.z = posZ;
+	textObj.color = color;
+	textObj.maxWidth =  maxWidth;
+	textObj.sync();
+}
+
 // Render loop
 function animate() {
 	const delta = clock.getDelta();
 	if (mixer) {
 		mixer.update(delta);
 	};
-	//renderer.render( scene, camera );
 	composer.render(delta);
 }
 renderer.setAnimationLoop( animate );
