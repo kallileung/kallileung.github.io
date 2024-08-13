@@ -43,6 +43,24 @@ img {
   height: auto;
 }
 
+.circular_image {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: blue;
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  justify-self:center;
+  
+  /*for demo*/
+  display:inline-block;
+  vertical-align:middle;
+}
+.circular_image img{
+  width:100%;
+}
+
 /*=============== CARD ===============*/
 .container {
   display: grid;
@@ -64,6 +82,14 @@ img {
   row-gap: 1rem;
   overflow: hidden;
   transition: background-color .6s;
+}
+
+.info__text {
+  position: relative;
+  display: grid;
+  row-gap: 0.3rem;
+  overflow:hidden;
+  color: var(--black-color);
 }
 
 .card__img {
