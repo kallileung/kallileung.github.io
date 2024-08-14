@@ -67,6 +67,14 @@ img {
   margin-inline: 1.5rem;
 }
 
+.info__container {
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  row-gap: 1.5rem;
+  margin-top: 5rem;
+}
+
 .card__container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 348px));
