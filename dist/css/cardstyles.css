@@ -44,8 +44,8 @@ img {
 }
 
 .circular_image {
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
   overflow: hidden;
   background-color: blue;
@@ -114,7 +114,7 @@ img {
 
 .section__container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 348px));
+  grid-template-columns: repeat(auto-fit, minmax(400px, 800px));
   justify-content: center;
   gap: 0.3rem;
   text-align: center;
