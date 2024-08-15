@@ -61,6 +61,10 @@ img {
   width:100%;
 }
 
+.filter-green{
+    filter: invert(22%) sepia(98%) saturate(3200%) hue-rotate(107deg) brightness(91%) contrast(104%);
+}
+
 /*=============== CARD ===============*/
 .container {
   display: grid;
@@ -98,6 +102,32 @@ img {
   row-gap: 0.3rem;
   overflow:hidden;
   color: var(--black-color);
+}
+
+.info__link {
+  position: relative;
+  display: grid;
+  row-gap: 0.3rem;
+  overflow:hidden;
+  color: var(--black-color);
+}
+
+.section__container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 348px));
+  justify-content: center;
+  gap: 0.3rem;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.icon__container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 90px));
+  justify-content: center;
+  gap: 0.1rem;
+  text-align: center;
+  margin-top: 1.5rem;
 }
 
 .card__img {
@@ -168,6 +198,11 @@ img {
   opacity: 1;
 }
 
+.info__link:hover {
+  text-decoration: underline;
+  color: blue;
+}
+ 
 /*=============== BREAKPOINTS ===============*/
 /* For small devices */
 @media screen and (max-width: 300px) {
