@@ -12,7 +12,7 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { Text } from 'troika-three-text';
-
+import { getParticleSystem } from "./getParticleSystem.js";
 
 let mixer;
 let objParentLookup;
@@ -21,6 +21,9 @@ let texLoader, faceMesh;
 let composer, outlinePass;
 let selectedObjects = [];
 let faceTex = [];
+let smokeEffect, musicEffect, plantEffect;
+let plantMesh, headphoneMesh, coffeeMesh;
+let isPlantParticleOn, isHeadphoneParticleOn, isCoffeeParticleOn;
 const clock = new THREE.Clock();
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({ antialising: true });
@@ -47,14 +50,6 @@ const toolTips = {
 	"rig" : "yo",
 }
 
-const params = {
-				edgeStrength: 7.0,
-				edgeGlow: 0.9,
-				edgeThickness: 10,
-				pulsePeriod: 0,
-				usePatternTexture: false
-			};
-
 renderer.setSize( window.innerWidth, window.innerHeight );
 // Set anti-aliasing on renderer
 renderer.setPixelRatio( window.devicePixelRatio * 2 );
@@ -72,8 +67,8 @@ composer.addPass( renderPass );
 outlinePass = new OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
 composer.addPass( outlinePass );
 
-outlinePass.edgeStrength = params.edgeStrength;
-outlinePass.edgeGlow = params.edgeGlow;
+outlinePass.edgeStrength = 7.0;
+outlinePass.edgeGlow = 0.9;
 outlinePass.visibleEdgeColor.set(0xffffff);
 outlinePass.hiddenEdgeColor.set(0xff00ff);
 
@@ -103,6 +98,28 @@ const navText = "ZOOM: MIDDLE MOUSE / WHEEL \nROTATE: LEFT MOUSE \nPAN: RIGHT MO
 const navHelpMesh = makeTextLabel(navText, 0.4, 0xFFFFFF, 5.5, 6.5, -4, 12, 'left');
 
 // add GLTF model to scene
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshStandardMaterial({color: 0xffff00});
+plantMesh = new THREE.Mesh(geometry, material);
+coffeeMesh = new THREE.Mesh(geometry, material);
+headphoneMesh = new THREE.Mesh(geometry, material);
+plantMesh.layers.set(idleLayer);
+coffeeMesh.layers.set(idleLayer);
+headphoneMesh.layers.set(idleLayer);
+coffeeMesh.position.x = 2;
+coffeeMesh.position.y = 3.7;
+coffeeMesh.scale.set(0.01, 0.01, 0.01);
+headphoneMesh.position.x = -1.158;
+headphoneMesh.position.y = 4.4;
+headphoneMesh.position.z = 1.23;
+headphoneMesh.scale.set(0.01, 0.01, 0.01);
+plantMesh.position.x = 2.66;
+plantMesh.position.y = 4.1;
+plantMesh.position.z = 1;
+plantMesh.scale.set(0.01, 0.01, 0.01);
+scene.add(plantMesh);
+scene.add(coffeeMesh);
+scene.add(headphoneMesh);
 
 loader.load( 'static/models/lowpoly_v4_3_sitting.glb', function ( gltf ) {
 
@@ -161,6 +178,42 @@ function setObjChild(mesh, parentName) {
 	}
 }
 
+smokeEffect = getParticleSystem({
+		camera,
+		emitter: coffeeMesh,
+		parent: scene,
+		rate: 8.0,
+		texture: 'static/images/sprites/smoke_04.png'
+	});
+
+musicEffect = getParticleSystem({
+	camera,
+	emitter: headphoneMesh,
+	parent: scene,
+	rate: 10.0,
+	texture: 'static/image/sprites/music_notes.png'
+});
+
+function setSmokeEffect() {
+	isCoffeeParticleOn = true;
+	setTimeout(cancelSmokeEffect, 6000);
+}
+
+function cancelSmokeEffect() {
+	isCoffeeParticleOn = false;
+}
+
+function setMusicEffect() {
+	console.log("playing music notes");
+	isHeadphoneParticleOn = true;
+	setTimeout(cancelMusicEffect, 6000);
+}
+
+function cancelMusicEffect() {
+	console.log("stopping music notes");
+	isHeadphoneParticleOn = false;
+}
+
 // set camera limits and position
 controls.minDistance = 5.0;
 controls.maxDistance = 10.0;
@@ -196,6 +249,13 @@ function onMouseDown(event) {
 			window.location.pathname = objDirectory[objParentName];
 		}
 		console.log(`${objParentName} was clicked!`);
+		if (objParentName === "CoffeeMug" && !isCoffeeParticleOn) {
+			setSmokeEffect();
+		}
+		if (objParentName === "Headphones" && !isHeadphoneParticleOn) {
+			setMusicEffect();
+		}
+
 	}
 }
 
@@ -255,5 +315,12 @@ function animate() {
 		mixer.update(delta);
 	};
 	composer.render(delta);
+	
+	if (smokeEffect) {
+		if (isCoffeeParticleOn) smokeEffect.update(delta/4);
+		else smokeEffect.updateDecaying(delta/4);
+	}
+	
+	//musicEffect.update(0.01);
 }
 renderer.setAnimationLoop( animate );
