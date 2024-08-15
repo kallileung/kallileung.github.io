@@ -241,6 +241,7 @@ function onDocumentMouseMove(event)
 	}
 	else {
 		// leave last hovered object highlighted
+		clearTooltip();
 	}
 }
 

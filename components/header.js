@@ -9,7 +9,7 @@ class Header extends HTMLElement {
 		<header class="top-bar">
 			<nav>
   			<input id="nav-toggle" type="checkbox">
-  		<div class="logo">OKAYKALE // kalli leung </div>
+  		<div class="logo">kallileung // OKAYKALE </div>
   		<ul class="links">
     		<li><a href="../">Home</a></li>
     		<li><a href="experience" rel="page">Experience</a></li>
