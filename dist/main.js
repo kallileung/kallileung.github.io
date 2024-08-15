@@ -21,9 +21,9 @@ let texLoader, faceMesh;
 let composer, outlinePass;
 let selectedObjects = [];
 let faceTex = [];
-let smokeEffect, musicEffect, plantEffect;
-let plantMesh, headphoneMesh, coffeeMesh;
-let isPlantParticleOn, isHeadphoneParticleOn, isCoffeeParticleOn;
+// let smokeEffect, musicEffect, plantEffect;
+// let plantMesh, headphoneMesh, coffeeMesh;
+// let isPlantParticleOn, isHeadphoneParticleOn, isCoffeeParticleOn;
 const clock = new THREE.Clock();
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({ antialising: true });
@@ -98,6 +98,7 @@ const navText = "ZOOM: MIDDLE MOUSE / WHEEL \nROTATE: LEFT MOUSE \nPAN: RIGHT MO
 const navHelpMesh = makeTextLabel(navText, 0.4, 0xFFFFFF, 5.5, 6.5, -4, 12, 'left');
 
 // add GLTF model to scene
+/*
 const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshStandardMaterial({color: 0xffff00});
 plantMesh = new THREE.Mesh(geometry, material);
@@ -120,6 +121,7 @@ plantMesh.scale.set(0.01, 0.01, 0.01);
 scene.add(plantMesh);
 scene.add(coffeeMesh);
 scene.add(headphoneMesh);
+*/
 
 loader.load( 'static/models/lowpoly_v4_3_sitting.glb', function ( gltf ) {
 
@@ -178,6 +180,7 @@ function setObjChild(mesh, parentName) {
 	}
 }
 
+/*
 smokeEffect = getParticleSystem({
 		camera,
 		emitter: coffeeMesh,
@@ -213,6 +216,7 @@ function cancelMusicEffect() {
 	console.log("stopping music notes");
 	isHeadphoneParticleOn = false;
 }
+*/
 
 // set camera limits and position
 controls.minDistance = 5.0;
@@ -249,12 +253,14 @@ function onMouseDown(event) {
 			window.location.pathname = objDirectory[objParentName];
 		}
 		console.log(`${objParentName} was clicked!`);
+		/*
 		if (objParentName === "CoffeeMug" && !isCoffeeParticleOn) {
 			setSmokeEffect();
 		}
 		if (objParentName === "Headphones" && !isHeadphoneParticleOn) {
 			setMusicEffect();
 		}
+		*/
 
 	}
 }
@@ -315,12 +321,13 @@ function animate() {
 		mixer.update(delta);
 	};
 	composer.render(delta);
-	
+	/*
 	if (smokeEffect) {
 		if (isCoffeeParticleOn) smokeEffect.update(delta/4);
 		else smokeEffect.updateDecaying(delta/4);
 	}
 	
 	//musicEffect.update(0.01);
+	*/
 }
 renderer.setAnimationLoop( animate );
