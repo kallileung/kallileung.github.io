@@ -14,6 +14,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { Text } from 'troika-three-text';
 import { getParticleSystem } from "./getParticleSystem.js";
 import { CSS2DRenderer, CSS2DObject} from 'three/addons/renderers/CSS2DRenderer.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 let mixer;
 let objParentLookup;
@@ -165,7 +166,12 @@ scene.add(coffeeMesh);
 scene.add(headphoneMesh);
 */
 
-loader.load( 'static/models/lowpoly_v4_3_sitting.glb', function ( gltf ) {
+const dLoader = new DRACOLoader();
+dLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+dLoader.setDecoderConfig({type: 'js'});
+loader.setDRACOLoader(dLoader);
+
+loader.load( 'static/models/lowpoly_v4_sitting.glb', function ( gltf ) {
 
 	var mesh = gltf.scene.children[0];
 	mixer = new THREE.AnimationMixer(mesh);
