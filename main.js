@@ -13,6 +13,7 @@ import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { Text } from 'troika-three-text';
 import { getParticleSystem } from "./getParticleSystem.js";
+import { CSS2DRenderer, CSS2DObject} from 'three/addons/renderers/CSS2DRenderer.js';
 
 let mixer;
 let objParentLookup;
@@ -45,9 +46,22 @@ const toolTips = {
 	"Books" : "Check out my art",
 	"BrushHolder" : "Peek at my sketchbook",
 	"Monitor" : "Looking for my resumé?",
-	"KeyboardMouse" : "Check out my projects",
+	"KeyboardMouse" : "Check out my projects!",
 	"Plant" : "Water me!",
-	"rig" : "yo",
+	"rig" : "Hello!",
+	"CoffeeMug" : "Heat me up!",
+	"Headphones" : "Play some tunes!"
+}
+
+const offsetPos = {
+	"Books" : [-2.8, 3.7, 1],
+	"BrushHolder" : [-3.5, 3.7, 1],
+	"Monitor" : [-2, 4, 1.75],
+	"KeyboardMouse" : [0, 3.5, 0],
+	"Headphones" : [-1, 4.4, 1.23],
+	"CoffeeMug": [2, 3.7, 0],
+	"Plant" : [2.66, 4.1, 1],
+	"rig" : [1.7, 5, -3]
 }
 
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -56,6 +70,25 @@ renderer.setPixelRatio( window.devicePixelRatio * 2 );
 document.body.appendChild( renderer.domElement );
 
 texLoader = new THREE.TextureLoader();
+
+
+// set up labels
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(window.innerWidth, window.innerHeight);
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0px';
+labelRenderer.domElement.style.pointerEvents = 'none';
+labelRenderer.domElement.style.fontSize = '22px';
+labelRenderer.domElement.style.color = 'white';
+labelRenderer.domElement.style.textShadow = '-1px -1px 0 #000,0 -1px 0 #000, 1px -1px 0 #000, 1px 0 0 #000, 1px 1px 0 #000, 0 1px 0 #000, -1px 1px 0 #000, -1px 0 0 #000';
+document.body.appendChild(labelRenderer.domElement);
+
+const labelDiv = document.createElement('div');
+ labelDiv.className = 'label';
+ labelDiv.style.marginTop = '-1em';
+ const label = new CSS2DObject(labelDiv);
+ label.visible = false;
+ scene.add(label);
 
 // SET UP COMPOSER FOR RAYCAST SELECTION POST PROCESSING ON HOVER
 // postprocessing
@@ -78,6 +111,7 @@ composer.addPass( outputPass );
 // Adapt to Window Resize
 function resize() {
   renderer.setSize(window.innerWidth,window.innerHeight);
+  labelRenderer.setSize(window.innerWidth, window.innerHeight);
 	composer.setSize(window.innerWidth,window.innerHeight);
   camera.aspect = window.innerWidth/window.innerHeight;
   camera.updateProjectionMatrix();
@@ -96,6 +130,13 @@ const textMesh = makeTextLabel(text, 0.8, 0xFFFFFF, -10, 10, -4, 20, 'center');
 
 const navText = "ZOOM: MIDDLE MOUSE / WHEEL \nROTATE: LEFT MOUSE \nPAN: RIGHT MOUSE OR \nSHIFT + LEFT MOUSE";
 const navHelpMesh = makeTextLabel(navText, 0.4, 0xFFFFFF, 5.5, 6.5, -4, 12, 'left');
+
+// add stats for performance profiling
+/*
+var stats = new Stats();
+stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild( stats.dom );
+*/
 
 // add GLTF model to scene
 /*
@@ -280,9 +321,30 @@ function onDocumentMouseMove(event)
 		var objParentName = objParentLookup.get(selectedObject.name);
 		console.log(`${objParentName} hovered`);
 		enableOutlineGroup(objParentName);
+		// Setup label
+      renderer.domElement.className = 'hovered';
+      label.visible = true;
+      labelDiv.textContent = toolTips[objParentName];
+
+      // Get offset from object's dimensions
+      const objX = offsetPos[objParentName][0];
+      const objY = offsetPos[objParentName][1];
+      const objZ = offsetPos[objParentName][2];
+
+      // Move label over hovered element
+      label.position.set(
+        objX,
+        objY,
+        objZ
+      );
+
 	}
 	else {
 		// leave last hovered object highlighted
+		// Reset label
+      renderer.domElement.className = '';
+      label.visible = false;
+      labelDiv.textContent = '';
 	}
 }
 
@@ -316,11 +378,13 @@ function makeTextLabel(text, size, color, posX, posY, posZ, maxWidth, align) {
 
 // Render loop
 function animate() {
+	//stats.begin();
 	const delta = clock.getDelta();
 	if (mixer) {
 		mixer.update(delta);
 	};
 	composer.render(delta);
+	labelRenderer.render(scene, camera);
 	/*
 	if (smokeEffect) {
 		if (isCoffeeParticleOn) smokeEffect.update(delta/4);
@@ -329,5 +393,6 @@ function animate() {
 	
 	//musicEffect.update(0.01);
 	*/
+	//stats.end();
 }
 renderer.setAnimationLoop( animate );
