@@ -43,8 +43,8 @@ const objDirectory = {
 };
 
 const toolTips = {
-	"Books" : "Check out my art",
-	"BrushHolder" : "Peek at my sketchbook",
+	"Books" : "Peek at my sketchbook",
+	"BrushHolder" : "Check out my art",
 	"Monitor" : "Looking for my resumé?",
 	"KeyboardMouse" : "Check out my projects!",
 	"Plant" : "Water me!",
