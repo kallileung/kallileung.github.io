@@ -80,6 +80,7 @@ labelRenderer.domElement.style.top = '0px';
 labelRenderer.domElement.style.pointerEvents = 'none';
 labelRenderer.domElement.style.fontSize = '22px';
 labelRenderer.domElement.style.color = 'white';
+labelRenderer.domElement.style.fontFamily = 'tahoma,sans-serif';
 labelRenderer.domElement.style.textShadow = '-1px -1px 0 #000,0 -1px 0 #000, 1px -1px 0 #000, 1px 0 0 #000, 1px 1px 0 #000, 0 1px 0 #000, -1px 1px 0 #000, -1px 0 0 #000';
 document.body.appendChild(labelRenderer.domElement);
 
@@ -302,6 +303,10 @@ function onMouseDown(event) {
 			setMusicEffect();
 		}
 		*/
+		if (objParentName === "rig") {
+			// change textures
+
+		}
 
 	}
 }
