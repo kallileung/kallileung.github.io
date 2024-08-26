@@ -66,7 +66,7 @@ nav .icon-burger .line {
 	border-radius: 3px;
 	transition: all .3s ease-in-out;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1080px) {
 	nav .logo {
 		float: none;
 		width: auto;
