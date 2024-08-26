@@ -8,9 +8,7 @@ class Header extends HTMLElement {
 		<link rel="stylesheet" href="../css/navstyle.css">
 		<header class="top-bar">
 			<nav>
-  			<label for="navcheckbox">
-  				<input id="nav-toggle" type="checkbox">
-  			</label>
+  			<input id="nav-toggle" type="checkbox">
   		<div class="logo">kallileung // OKAYKALE </div>
   		<ul class="links">
     		<li><a href="../">Home</a></li>
