@@ -12,7 +12,6 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { Text } from 'troika-three-text';
-import { getParticleSystem } from "./getParticleSystem.js";
 import { CSS2DRenderer, CSS2DObject} from 'three/addons/renderers/CSS2DRenderer.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
