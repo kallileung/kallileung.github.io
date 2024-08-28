@@ -21,10 +21,6 @@ let objChildrenList;
 let texLoader, faceMesh;
 let composer, outlinePass;
 let selectedObjects = [];
-let faceTex = [];
-// let smokeEffect, musicEffect, plantEffect;
-// let plantMesh, headphoneMesh, coffeeMesh;
-// let isPlantParticleOn, isHeadphoneParticleOn, isCoffeeParticleOn;
 const clock = new THREE.Clock();
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({ antialising: true });
@@ -126,11 +122,11 @@ window.onscroll = function () {
    }
 
 // add text overlay
-const text = "Hi! I'm Kalli, software engineer and 2D/3D artist. Welcome to my workspace! \nClick around to explore.";
-const textMesh = makeTextLabel(text, 0.8, 0xFFFFFF, -10, 10, -4, 20, 'center');
+const text = "Hi! I'm Kalli, \nsoftware engineer and 2D/3D artist. \nWelcome to my workspace! \nClick around to explore.";
+const textMesh = makeTextLabel(text, 0.8, 0xFFFFFF, -7, 11, -4, 20, 'center');
 
 const navText = "ZOOM: MIDDLE MOUSE / WHEEL \nROTATE: LEFT MOUSE \nPAN: RIGHT MOUSE OR \nSHIFT + LEFT MOUSE";
-const navHelpMesh = makeTextLabel(navText, 0.4, 0xFFFFFF, 5.5, 6.5, -4, 12, 'left');
+const navHelpMesh = makeTextLabel(navText, 0.4, 0xFFFFFF, 5, 6.5, -4, 12, 'left');
 
 // add stats for performance profiling
 /*
@@ -140,31 +136,6 @@ document.body.appendChild( stats.dom );
 */
 
 // add GLTF model to scene
-/*
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshStandardMaterial({color: 0xffff00});
-plantMesh = new THREE.Mesh(geometry, material);
-coffeeMesh = new THREE.Mesh(geometry, material);
-headphoneMesh = new THREE.Mesh(geometry, material);
-plantMesh.layers.set(idleLayer);
-coffeeMesh.layers.set(idleLayer);
-headphoneMesh.layers.set(idleLayer);
-coffeeMesh.position.x = 2;
-coffeeMesh.position.y = 3.7;
-coffeeMesh.scale.set(0.01, 0.01, 0.01);
-headphoneMesh.position.x = -1.158;
-headphoneMesh.position.y = 4.4;
-headphoneMesh.position.z = 1.23;
-headphoneMesh.scale.set(0.01, 0.01, 0.01);
-plantMesh.position.x = 2.66;
-plantMesh.position.y = 4.1;
-plantMesh.position.z = 1;
-plantMesh.scale.set(0.01, 0.01, 0.01);
-scene.add(plantMesh);
-scene.add(coffeeMesh);
-scene.add(headphoneMesh);
-*/
-
 const dLoader = new DRACOLoader();
 dLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
 dLoader.setDecoderConfig({type: 'js'});
@@ -227,52 +198,14 @@ function setObjChild(mesh, parentName) {
 	}
 }
 
-/*
-smokeEffect = getParticleSystem({
-		camera,
-		emitter: coffeeMesh,
-		parent: scene,
-		rate: 8.0,
-		texture: 'static/images/sprites/smoke_04.png'
-	});
-
-musicEffect = getParticleSystem({
-	camera,
-	emitter: headphoneMesh,
-	parent: scene,
-	rate: 10.0,
-	texture: 'static/image/sprites/music_notes.png'
-});
-
-function setSmokeEffect() {
-	isCoffeeParticleOn = true;
-	setTimeout(cancelSmokeEffect, 6000);
-}
-
-function cancelSmokeEffect() {
-	isCoffeeParticleOn = false;
-}
-
-function setMusicEffect() {
-	console.log("playing music notes");
-	isHeadphoneParticleOn = true;
-	setTimeout(cancelMusicEffect, 6000);
-}
-
-function cancelMusicEffect() {
-	console.log("stopping music notes");
-	isHeadphoneParticleOn = false;
-}
-*/
-
 // set camera limits and position
 controls.minDistance = 5.0;
-controls.maxDistance = 10.0;
+controls.maxDistance = 15.0;
 controls.minPolarAngle = 0.0;
 controls.maxPolarAngle = Math.PI;
 
-camera.position.z = 9;
-camera.position.y = 3.25;
+camera.position.z = 12;
+camera.position.y = 5;
 camera.layers.enableAll();
 
 // Raycaster for object selection
@@ -300,14 +233,7 @@ function onMouseDown(event) {
 			window.location.pathname = objDirectory[objParentName];
 		}
 		console.log(`${objParentName} was clicked!`);
-		/*
-		if (objParentName === "CoffeeMug" && !isCoffeeParticleOn) {
-			setSmokeEffect();
-		}
-		if (objParentName === "Headphones" && !isHeadphoneParticleOn) {
-			setMusicEffect();
-		}
-		*/
+
 		if (objParentName === "rig") {
 			// change textures
 
@@ -395,14 +321,6 @@ function animate() {
 	};
 	composer.render(delta);
 	labelRenderer.render(scene, camera);
-	/*
-	if (smokeEffect) {
-		if (isCoffeeParticleOn) smokeEffect.update(delta/4);
-		else smokeEffect.updateDecaying(delta/4);
-	}
-	
-	//musicEffect.update(0.01);
-	*/
 	//stats.end();
 }
 renderer.setAnimationLoop( animate );
