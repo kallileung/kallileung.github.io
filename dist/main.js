@@ -52,7 +52,7 @@ const toolTips = {
 const offsetPos = {
 	"Books" : [-2.8, 2.7, 1],
 	"BrushHolder" : [-3.5, 2.7, 1],
-	"Monitor" : [-2, 3, 1.75],
+	"Monitor" : [-2, 3.4, 1.75],
 	"KeyboardMouse" : [0, 2.5, 0],
 	"Headphones" : [-1, 3.4, 1.23],
 	"CoffeeMug": [2, 2.7, 0],
