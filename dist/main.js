@@ -123,7 +123,7 @@ window.onscroll = function () {
 
 // add text overlay
 const text = "Hi! I'm Kalli, \nsoftware engineer and 2D/3D artist. \nWelcome to my workspace! \nClick around to explore.";
-const textMesh = makeTextLabel(text, 0.8, 0xFFFFFF, -7, 11, -4, 20, 'center');
+const textMesh = makeTextLabel(text, 0.8, 0xFFFFFF, -6.5, 11, -4, 20, 'center');
 
 const navText = "ZOOM: MIDDLE MOUSE / WHEEL \nROTATE: LEFT MOUSE \nPAN: RIGHT MOUSE OR \nSHIFT + LEFT MOUSE";
 const navHelpMesh = makeTextLabel(navText, 0.4, 0xFFFFFF, 5, 6.5, -4, 12, 'left');
