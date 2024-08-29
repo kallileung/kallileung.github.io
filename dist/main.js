@@ -50,14 +50,14 @@ const toolTips = {
 }
 
 const offsetPos = {
-	"Books" : [-2.8, 3.7, 1],
-	"BrushHolder" : [-3.5, 3.7, 1],
-	"Monitor" : [-2, 4, 1.75],
-	"KeyboardMouse" : [0, 3.5, 0],
-	"Headphones" : [-1, 4.4, 1.23],
-	"CoffeeMug": [2, 3.7, 0],
-	"Plant" : [2.66, 4.1, 1],
-	"rig" : [1.7, 5, -3]
+	"Books" : [-2.8, 2.7, 1],
+	"BrushHolder" : [-3.5, 2.7, 1],
+	"Monitor" : [-2, 3, 1.75],
+	"KeyboardMouse" : [0, 2.5, 0],
+	"Headphones" : [-1, 3.4, 1.23],
+	"CoffeeMug": [2, 2.7, 0],
+	"Plant" : [2.66, 3.1, 1],
+	"rig" : [1.7, 4, -3]
 }
 
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -141,7 +141,7 @@ dLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/'
 dLoader.setDecoderConfig({type: 'js'});
 loader.setDRACOLoader(dLoader);
 
-loader.load( 'static/models/lowpoly_v4_sitting.glb', function ( gltf ) {
+loader.load( 'static/models/lowpoly_v4_1_sitting.glb', function ( gltf ) {
 
 	var mesh = gltf.scene.children[0];
 	mixer = new THREE.AnimationMixer(mesh);
@@ -175,7 +175,10 @@ loader.load( 'static/models/lowpoly_v4_sitting.glb', function ( gltf ) {
 // SET OBJ LAYERS FOR RAYCASTING & SELECTION
 function setObjLayerRecursive(mesh, layer, parentName) {
 	mesh.layers.set(layer);
-	if (mesh.name == "face") faceMesh = mesh;
+	if (mesh.name == "face") {
+		faceMesh = mesh;
+		setInterval(blink, 3400);
+	}
 	if (mesh.children.length > 0) {
 		for (let i = 0; i < mesh.children.length; i++) {
 			setObjLayerRecursive(mesh.children[i], layer, parentName);
@@ -202,7 +205,7 @@ function setObjChild(mesh, parentName) {
 controls.minDistance = 5.0;
 controls.maxDistance = 15.0;
 controls.minPolarAngle = 0.0;
-controls.maxPolarAngle = Math.PI;
+controls.maxPolarAngle = Math.PI/2;
 
 camera.position.z = 12;
 camera.position.y = 5;
@@ -236,10 +239,27 @@ function onMouseDown(event) {
 
 		if (objParentName === "rig") {
 			// change textures
-
+			var uPos = Math.floor(Math.random() * 2);
+			var vPos = Math.floor(Math.random() * 3);
+			faceMesh.material.emissiveMap.offset.x =  uPos*0.5;
+			faceMesh.material.emissiveMap.offset.y =  (vPos+1)*0.25;
 		}
-
 	}
+}
+
+function blink() {
+	eyesClose();
+	setTimeout(eyesOpen, 80);
+}
+
+function eyesOpen() {
+	faceMesh.material.emissiveMap.offset.x = 0;
+	faceMesh.material.emissiveMap.offset.y = 0;
+}
+
+function eyesClose() {
+	faceMesh.material.emissiveMap.offset.x = 0.5;
+	faceMesh.material.emissiveMap.offset.y = 0;
 }
 
 function onDocumentMouseMove(event) 
@@ -255,7 +275,7 @@ function onDocumentMouseMove(event)
 	if (intersections.length > 0) {
 		const selectedObject = intersections[0].object;
 		var objParentName = objParentLookup.get(selectedObject.name);
-		console.log(`${objParentName} hovered`);
+		//console.log(`${objParentName} hovered`);
 		enableOutlineGroup(objParentName);
 		// Setup label
       renderer.domElement.className = 'hovered';
