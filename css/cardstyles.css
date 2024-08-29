@@ -216,6 +216,10 @@ img {
   .card__container {
     grid-template-columns: 1fr;
   }
+
+  .info__container {
+    margin-inline: 1rem;
+  }
 }
 
 /* For large devices */
