@@ -177,7 +177,7 @@ function setObjLayerRecursive(mesh, layer, parentName) {
 	mesh.layers.set(layer);
 	if (mesh.name == "face") {
 		faceMesh = mesh;
-		setInterval(blink, 3400);
+		setInterval(blink, 3000);
 	}
 	if (mesh.children.length > 0) {
 		for (let i = 0; i < mesh.children.length; i++) {
