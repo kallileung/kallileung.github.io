@@ -14,13 +14,17 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { Text } from 'troika-three-text';
 import { CSS2DRenderer, CSS2DObject} from 'three/addons/renderers/CSS2DRenderer.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { getParticleSystem } from './getParticleSystem.js';
+//import fs from './glsl/fragment_shader.glsl';
+//import vs from './glsl/vertex_shader.glsl';
 
 let mixer;
 let objParentLookup;
 let objChildrenList;
-let texLoader, faceMesh;
+let faceMesh;
 let composer, outlinePass;
 let selectedObjects = [];
+let isSteamEmitting, isWaterEmitting, isMusicEmitting = false;
 const clock = new THREE.Clock();
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({ antialising: true });
@@ -65,9 +69,6 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setPixelRatio( window.devicePixelRatio * 2 );
 document.body.appendChild( renderer.domElement );
 
-texLoader = new THREE.TextureLoader();
-
-
 // set up labels
 const labelRenderer = new CSS2DRenderer();
 labelRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -104,6 +105,65 @@ outlinePass.hiddenEdgeColor.set(0xff00ff);
 
 const outputPass = new OutputPass();
 composer.addPass( outputPass );
+
+// SET UP PARTICLE SYSTEMS
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshStandardMaterial({
+  color: 0xffff00,
+});
+const smokeCube = new THREE.Mesh(geometry, material);
+smokeCube.position.x = offsetPos["CoffeeMug"][0];
+smokeCube.position.y = offsetPos["CoffeeMug"][1]-0.1;
+smokeCube.position.z = offsetPos["CoffeeMug"][2];
+smokeCube.visible = false;
+smokeCube.layers.set(idleLayer);
+scene.add(smokeCube);
+
+const waterCube = new THREE.Mesh(geometry, material);
+waterCube.position.x = offsetPos["Plant"][0];
+waterCube.position.y = offsetPos["Plant"][1]-0.5;
+waterCube.position.z = offsetPos["Plant"][2];
+waterCube.visible = false;
+waterCube.layers.set(idleLayer);
+scene.add(waterCube);
+
+const musicCube = new THREE.Mesh(geometry, material);
+musicCube.position.x = offsetPos["Headphones"][0];
+musicCube.position.y = offsetPos["Headphones"][1];
+musicCube.position.z = offsetPos["Headphones"][2];
+musicCube.visible = false;
+musicCube.layers.set(idleLayer);
+scene.add(musicCube);
+
+const smokeEffect = getParticleSystem({
+  camera,
+  emitter: smokeCube, // TODO - fix
+  parent: scene,
+  rate: 10.0,
+  texture: 'static/textures/smoke_07.png',
+  vs: document.getElementById('vertexshader').textContent,
+  fs: document.getElementById('fragmentshader').textContent
+});
+
+const musicEffect = getParticleSystem({
+  camera,
+  emitter: musicCube, // TODO - fix
+  parent: scene,
+  rate: 3.6,
+  texture: 'static/images/sprites/music_notes.png',
+  vs: document.getElementById('vertexshader').textContent,
+  fs: document.getElementById('fragmentshader').textContent
+});
+
+const waterEffect = getParticleSystem({
+  camera,
+  emitter: waterCube, // TODO - fix
+  parent: scene,
+  rate: 10.0,
+  texture: 'static/textures/lensflare0_alpha.png',
+  vs: document.getElementById('vertexshader').textContent,
+  fs: document.getElementById('fragmentshader').textContent
+});
 
 // Adapt to Window Resize
 function resize() {
@@ -235,7 +295,7 @@ function onMouseDown(event) {
 		if (objDirectory[objParentName] !== undefined) {
 			window.location.pathname = objDirectory[objParentName];
 		}
-		console.log(`${objParentName} was clicked!`);
+		//console.log(`${objParentName} was clicked!`);
 
 		if (objParentName === "rig") {
 			// change textures
@@ -244,7 +304,40 @@ function onMouseDown(event) {
 			faceMesh.material.emissiveMap.offset.x =  uPos*0.5;
 			faceMesh.material.emissiveMap.offset.y =  (vPos+1)*0.25;
 		}
+
+		if (objParentName === "Headphones") {
+			if (!isMusicEmitting) {
+				isMusicEmitting = true;
+				setTimeout(turnMusicOff, 2000);
+			}
+		}
+
+		if (objParentName === "CoffeeMug") {
+			if (!isSteamEmitting) {
+				isSteamEmitting = true;
+				setTimeout(turnSteamOff, 1300);
+			}
+		}
+
+		if (objParentName === "Plant") {
+			if (!isWaterEmitting) {
+				isWaterEmitting = true;
+				setTimeout(turnWaterOff, 1000);
+			}
+		}
 	}
+}
+
+function turnMusicOff() {
+	isMusicEmitting = false;
+}
+
+function turnWaterOff() {
+	isWaterEmitting = false;
+}
+
+function turnSteamOff() {
+	isSteamEmitting = false;
 }
 
 function blink() {
@@ -342,5 +435,20 @@ function animate() {
 	composer.render(delta);
 	labelRenderer.render(scene, camera);
 	//stats.end();
+	if (isWaterEmitting) {
+		waterEffect.update(delta);
+	} else {
+		waterEffect.updateDecaying(delta);
+	}
+	if (isSteamEmitting) {
+		smokeEffect.update(delta);
+	} else {
+		smokeEffect.updateDecaying(delta);
+	}
+	if (isMusicEmitting) {
+		musicEffect.update(delta);
+	} else {
+		musicEffect.updateDecaying(delta);
+	}
 }
 renderer.setAnimationLoop( animate );
