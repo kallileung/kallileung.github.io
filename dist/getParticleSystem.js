@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-
+/*
 const _VS = `
 uniform float pointMultiplier;
 
@@ -30,6 +30,7 @@ void main() {
   vec2 coords = (gl_PointCoord - 0.5) * mat2(vAngle.x, vAngle.y, -vAngle.y, vAngle.x) + 0.5;
   gl_FragColor = texture2D(diffuseTexture, coords) * vColor;
 }`;
+*/
 
 
 function getLinearSpline(lerp) {
@@ -66,7 +67,7 @@ function getLinearSpline(lerp) {
 }
 
 function getParticleSystem(params) {
-  const { camera, emitter, parent, rate, texture } = params;
+  const { camera, emitter, parent, rate, texture, blend, vs, fs } = params;
   const uniforms = {
     diffuseTexture: {
       value: new THREE.TextureLoader().load(texture)
@@ -77,8 +78,8 @@ function getParticleSystem(params) {
   };
   const _material = new THREE.ShaderMaterial({
     uniforms: uniforms,
-    vertexShader: _VS,
-    fragmentShader: _FS,
+    vertexShader: vs,
+    fragmentShader: fs,
     blending: THREE.AdditiveBlending,
     depthTest: true,
     depthWrite: false,
