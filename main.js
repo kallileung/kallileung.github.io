@@ -15,8 +15,6 @@ import { Text } from 'troika-three-text';
 import { CSS2DRenderer, CSS2DObject} from 'three/addons/renderers/CSS2DRenderer.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { getParticleSystem } from './getParticleSystem.js';
-//import fs from './glsl/fragment_shader.glsl';
-//import vs from './glsl/vertex_shader.glsl';
 
 let mixer;
 let objParentLookup;
@@ -25,6 +23,7 @@ let faceMesh;
 let composer, outlinePass;
 let selectedObjects = [];
 let isSteamEmitting, isWaterEmitting, isMusicEmitting = false;
+let isSteamActive, isWaterActive, isMusicActive = false;
 const clock = new THREE.Clock();
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({ antialising: true });
@@ -189,11 +188,11 @@ const navText = "ZOOM: MIDDLE MOUSE / WHEEL \nROTATE: LEFT MOUSE \nPAN: RIGHT MO
 const navHelpMesh = makeTextLabel(navText, 0.4, 0xFFFFFF, 5, 6.5, -4, 12, 'left');
 
 // add stats for performance profiling
-/*
+
 var stats = new Stats();
-stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild( stats.dom );
-*/
+
 
 // add GLTF model to scene
 const dLoader = new DRACOLoader();
@@ -306,23 +305,29 @@ function onMouseDown(event) {
 		}
 
 		if (objParentName === "Headphones") {
-			if (!isMusicEmitting) {
+			if (!isMusicActive & !isMusicEmitting) {
 				isMusicEmitting = true;
+				isMusicActive = true;
 				setTimeout(turnMusicOff, 2000);
+				setTimeout(deactivateMusic, 2000*2.25);
 			}
 		}
 
 		if (objParentName === "CoffeeMug") {
-			if (!isSteamEmitting) {
+			if (!isSteamActive & !isSteamEmitting) {
 				isSteamEmitting = true;
+				isSteamActive = true;
 				setTimeout(turnSteamOff, 1300);
+				setTimeout(deactivateSteam, 1300*2.9);
 			}
 		}
 
 		if (objParentName === "Plant") {
-			if (!isWaterEmitting) {
+			if (!isWaterActive & !isWaterEmitting) {
 				isWaterEmitting = true;
+				isWaterActive = true;
 				setTimeout(turnWaterOff, 1000);
+				setTimeout(deactivateWater, 1000*2.5);
 			}
 		}
 	}
@@ -338,6 +343,18 @@ function turnWaterOff() {
 
 function turnSteamOff() {
 	isSteamEmitting = false;
+}
+
+function deactivateMusic() {
+	isMusicActive = false;
+}
+
+function deactivateWater() {
+	isWaterActive = false;
+}
+
+function deactivateSteam() {
+	isSteamActive = false;
 }
 
 function blink() {
@@ -427,28 +444,34 @@ function makeTextLabel(text, size, color, posX, posY, posZ, maxWidth, align) {
 
 // Render loop
 function animate() {
-	//stats.begin();
+	stats.begin();
 	const delta = clock.getDelta();
 	if (mixer) {
 		mixer.update(delta);
 	};
 	composer.render(delta);
 	labelRenderer.render(scene, camera);
-	//stats.end();
-	if (isWaterEmitting) {
-		waterEffect.update(delta);
-	} else {
-		waterEffect.updateDecaying(delta);
+	if (isWaterActive) {
+		if (isWaterEmitting) {
+			waterEffect.update(delta);
+		} else {
+			waterEffect.updateDecaying(delta);
+		}
 	}
-	if (isSteamEmitting) {
-		smokeEffect.update(delta);
-	} else {
-		smokeEffect.updateDecaying(delta);
+	if (isSteamActive) {
+		if (isSteamEmitting) {
+			smokeEffect.update(delta/2);
+		} else {
+			smokeEffect.updateDecaying(delta/2);
+		}
 	}
-	if (isMusicEmitting) {
-		musicEffect.update(delta);
-	} else {
-		musicEffect.updateDecaying(delta);
+	if (isMusicActive) {
+		if (isMusicEmitting) {
+			musicEffect.update(delta);
+		} else {
+			musicEffect.updateDecaying(delta);
+		}
 	}
+	stats.end();
 }
 renderer.setAnimationLoop( animate );
