@@ -188,10 +188,11 @@ const navText = "ZOOM: MIDDLE MOUSE / WHEEL \nROTATE: LEFT MOUSE \nPAN: RIGHT MO
 const navHelpMesh = makeTextLabel(navText, 0.4, 0xFFFFFF, 5, 6.5, -4, 12, 'left');
 
 // add stats for performance profiling
-
+/*
 var stats = new Stats();
 stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild( stats.dom );
+*/
 
 
 // add GLTF model to scene
@@ -444,7 +445,7 @@ function makeTextLabel(text, size, color, posX, posY, posZ, maxWidth, align) {
 
 // Render loop
 function animate() {
-	stats.begin();
+	//stats.begin();
 	const delta = clock.getDelta();
 	if (mixer) {
 		mixer.update(delta);
@@ -472,6 +473,6 @@ function animate() {
 			musicEffect.updateDecaying(delta);
 		}
 	}
-	stats.end();
+	//stats.end();
 }
 renderer.setAnimationLoop( animate );
