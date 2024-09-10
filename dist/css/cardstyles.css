@@ -220,6 +220,7 @@ img {
   .info__container {
     margin-inline: 1rem;
     height: 100vh;
+    max-width: 300px;
   }
 }
 
@@ -233,6 +234,7 @@ img {
 
   .info__container {
     height: 100vh;
+    flex-wrap: nowrap;
   }
 
   .card__img {
