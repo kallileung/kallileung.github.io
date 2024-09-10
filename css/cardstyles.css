@@ -73,8 +73,8 @@ img {
 
 .info__container {
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  justify-self: center;
+  align-items: center;
   row-gap: 1.5rem;
   margin-top: 5rem;
 }
@@ -99,7 +99,7 @@ img {
 .info__text {
   position: relative;
   display: grid;
-  row-gap: 0.3rem;
+  row-gap: 0.5rem;
   overflow:hidden;
   color: var(--black-color);
   font-size: 1.35rem;
@@ -115,7 +115,7 @@ img {
 
 .section__container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 800px));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 800px));
   justify-content: center;
   gap: 0.3rem;
   text-align: center;
@@ -220,7 +220,6 @@ img {
   .info__container {
     margin-inline: 1rem;
     height: 100vh;
-    max-width: 300px;
   }
 }
 
@@ -234,7 +233,6 @@ img {
 
   .info__container {
     height: 100vh;
-    flex-wrap: nowrap;
   }
 
   .card__img {
