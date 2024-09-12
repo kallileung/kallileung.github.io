@@ -1,3 +1,9 @@
+:root {
+  /*========== Colors ==========*/
+  /*Color mode HSL(hue, saturation, lightness)*/
+  --white-color: hsl(170, 12%, 98%);
+}
+
 .container {
 	position: relative;
 	margin-top: 100px;
@@ -16,6 +22,11 @@ nav {
 	padding: 0 5%;
 	height: 80px;
 }
+
+.opaque {
+	background-color: var(--white-color);
+}
+
 nav .logo {
 	float: left;
 	width: 40%;
