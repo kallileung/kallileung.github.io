@@ -1,34 +1,219 @@
-.navbar-brand {
-  letter-spacing: 3px;
-  color: #c24244;
-  position: fixed;
-  top: 0;
+/*=============== VARIABLES CSS ===============*/
+:root {
+  /*========== Colors ==========*/
+  /*Color mode HSL(hue, saturation, lightness)*/
+  --white-color: hsl(170, 12%, 98%);
+  --black-color: hsl(170, 12%, 8%);
+
+  /*========== Font and typography ==========*/
+  /*.5rem = 8px | 1rem = 16px ...*/
+  --body-font: "Montserrat", sans-serif;
+  --normal-font-size: .938rem;
 }
 
-.navbar-brand:hover {
-  color: #c24244;
+/*========== Responsive typography ==========*/
+@media screen and (min-width: 1120px) {
+  :root {
+    --normal-font-size: 1rem;
+  }
 }
 
-.navbar-scroll .nav-link,
-.navbar-scroll .fa-bars {
-  color: #7f4722;
+/*=============== BASE ===============*/
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-.navbar-scrolled .nav-link,
-.navbar-scrolled .fa-bars {
-  color: #7f4722;
+body {
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+  background-color: var(--white-color);
+  color: var(--black-color);
 }
 
-.navbar-scrolled {
-  background-color: #ffede7;
+a {
+  text-decoration: none;
 }
 
-.nav-item {
-  display: inline-block;
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
+ul {
+  padding-left: 1.2rem;
+  padding-bottom: 0.5rem;
+}
+
+
+/*=============== CARD ===============*/
+.container {
+  display: grid;
+  margin-inline: 1.5rem;
+}
+
+
+.grid_container_element { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    grid-gap: 20px; 
+    /*border: 1px solid black;*/ 
+    width: 50%; 
+} 
+.gridchild_element { 
+    margin: 10px; 
+    /*border: 1px solid red;*/
+}
+
+/* Solid border */
+hr.solid {
+  border-top: 3px solid #ccc;
+}
+
+.resume__container {
+  flex-direction: column;
+  justify-self: left;
+  align-items: left;
+  row-gap: 1.5rem;
+  margin-top: 5rem;
+
+  /*border: 1px solid green;*/
+}
+
+.resume__container_col {
+  flex-direction: column;
+  justify-self: left;
+  align-items: left;
+  row-gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.resume__container_row {
+  flex-direction: row;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-between;
+  /*border: 1px solid blue;*/
+}
+
+.heading {
+  position: relative;
+  display: grid;
+  row-gap: 1rem;
+  overflow:hidden;
+  color: var(--black-color);
+  font-size: 1.5rem;
+}
+
+.title {
+  position: relative;
+  display: grid;
+  row-gap: 1rem;
+  overflow:hidden;
+  color: var(--black-color);
+  font-size: 1.8rem;
+  font-style: bold;
+}
+
+.desc__text {
+  grid-gap: 0.5rem;
+  row-gap: 0.5rem;
+  overflow:hidden;
+  color: var(--black-color);
+  font-size: 1.2rem;
+  /*border: 1px solid red;*/ 
+}
+.anchor__bottom {
+  display: grid;
+  align-self: flex-end;
+  align-items: self-end;
+}
+
+.desc__text_r {
+  grid-gap: 0.5rem;
+  row-gap: 0.5rem;
+  overflow:hidden;
+  justify-self: flex-end;
+  color: var(--black-color);
+  font-size: 1.2rem;
+  /*border: 1px solid red;*/
+}
+
+.desc__body {
+  overflow:hidden;
+  color: var(--black-color);
+  font-size: 1.2rem;
+  /*border: 1px solid purple;*/
+}
+
+.desc__link {
+  justify-self: right;
+  position: relative;
+  display: grid;
+  row-gap: 0.3rem;
+  overflow:hidden;
+  color: brown;
+  font-size: 1.3rem;
+}
+
+.ext__link {
+  text-decoration-line: underline;
+  color: brown;
+}
+
+.resume_section__container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1440px));
+  justify-content: left;
+  gap: 1rem;
+  text-align: left;
+  margin-top: 1rem;
+  margin-left: 5rem;
+  margin-right: 5rem;
+}
+
+.desc__link:hover {
+  text-decoration: underline;
+  color: blue;
+}
+
+.subtitle {
+  font-style: italic;
+}
+
+ 
+/*=============== BREAKPOINTS ===============*/
+/* For small devices */
+@media screen and (max-width: 300px) {
+  .container {
+    margin-inline: 1rem;
+  }
+
+  .card__container {
+    grid-template-columns: 1fr;
+  }
+
+  .info__container {
+    margin-inline: 1rem;
+    height: 100vh;
+  }
+}
+
+/* For large devices */
+@media screen and (min-width: 1120px) {
+  .container {
+    height: 100vh;
+    display: grid;
+    align-items: center;
+  }
+
+  .info__container {
+    height: 100vh;
+  }
+
+  .card__img {
+    width: 220px;
+  }
 }
