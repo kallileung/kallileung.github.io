@@ -104,7 +104,7 @@ hr.solid {
   row-gap: 1rem;
   overflow:hidden;
   color: var(--black-color);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 }
 
 .title {
@@ -122,7 +122,7 @@ hr.solid {
   row-gap: 0.5rem;
   overflow:hidden;
   color: var(--black-color);
-  font-size: 1.2rem;
+  font-size: 1rem;
   /*border: 1px solid red;*/ 
 }
 .anchor__bottom {
@@ -137,14 +137,14 @@ hr.solid {
   overflow:hidden;
   justify-self: flex-end;
   color: var(--black-color);
-  font-size: 1.2rem;
+  font-size: 1rem;
   /*border: 1px solid red;*/
 }
 
 .desc__body {
   overflow:hidden;
   color: var(--black-color);
-  font-size: 1.2rem;
+  font-size: 1rem;
   /*border: 1px solid purple;*/
 }
 
@@ -155,7 +155,7 @@ hr.solid {
   row-gap: 0.3rem;
   overflow:hidden;
   color: brown;
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 
 .ext__link {
