@@ -101,7 +101,7 @@ hr.solid {
 .project__container {
   flex-direction: row;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   margin: 3rem;
 }
 
@@ -210,7 +210,11 @@ hr.solid {
 /*=============== BREAKPOINTS ===============*/
 /* For small devices */
 @media screen and (max-width: 300px) {
-  .container {
+  .project__container {
+    margin-inline: 1rem;
+  }
+
+  .resume__container {
     margin-inline: 1rem;
   }
 
