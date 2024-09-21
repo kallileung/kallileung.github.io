@@ -116,6 +116,10 @@ hr.solid {
   margin: 1rem;
 }
 
+.project__links {
+  margin-top: 1rem;
+}
+
 .heading {
   position: relative;
   display: grid;
