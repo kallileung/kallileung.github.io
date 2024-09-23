@@ -99,10 +99,10 @@ hr.solid {
 }
 
 .project__container {
-  flex-direction: row;
+  flex-direction: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1800px));
   display: flex;
-  justify-content: flex-start;
-  margin: 3rem;
+  justify-content: left;
 }
 
 .project__icon {
@@ -144,7 +144,6 @@ hr.solid {
   row-gap: 0.5rem;
   overflow:hidden;
   color: var(--black-color);
-  font-size: 1rem;
   /*border: 1px solid red;*/ 
 }
 .anchor__bottom {
@@ -159,14 +158,12 @@ hr.solid {
   overflow:hidden;
   justify-self: flex-end;
   color: var(--black-color);
-  font-size: 1rem;
   /*border: 1px solid red;*/
 }
 
 .desc__body {
   overflow:hidden;
   color: var(--black-color);
-  font-size: 1rem;
   /*border: 1px solid purple;*/
 }
 
@@ -177,7 +174,6 @@ hr.solid {
   row-gap: 0.3rem;
   overflow:hidden;
   color: brown;
-  font-size: 1rem;
 }
 
 .ext__link {
@@ -209,9 +205,10 @@ hr.solid {
  
 /*=============== BREAKPOINTS ===============*/
 /* For small devices */
-@media screen and (max-width: 300px) {
+@media screen and (max-width: 600px) {
   .project__container {
-    margin-inline: 1rem;
+    display: block;
+    margin-inline: 0.1rem;
   }
 
   .resume__container {
@@ -225,6 +222,11 @@ hr.solid {
   .info__container {
     margin-inline: 1rem;
     height: 100vh;
+  }
+
+  .project__icon {
+    width:  200px;
+    height: 200px;
   }
 }
 
